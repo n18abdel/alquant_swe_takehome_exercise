@@ -57,7 +57,7 @@ const closeDropdown = () => {
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li v-for="item in items" :key="item.name">
+        <li v-for="item in items" :key="item.name" @click="blurActiveElement">
           <RouterLink :to="item.path">{{ item.name }}</RouterLink>
         </li>
       </ul>
