@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import NavBar from './components/NavBar.vue'
-import router from './router'
 import { capitalize } from 'vue'
 const getStarted = '/performance'
 const navbar = {
   title: 'Alquant SWE',
-  items: router
+  items: useRouter()
     .getRoutes()
     .filter((e) => e.path != '/')
     .map(({ path, name }) => ({ path, name: capitalize(name! as string) })),
@@ -16,5 +15,14 @@ const navbar = {
 
 <template>
   <NavBar v-bind="navbar" />
-  <RouterView :get-started="getStarted" />
+  <RouterView v-slot="{ Component }" :get-started="getStarted">
+    <Transition
+      enter-from-class="opacity-0"
+      leave-to-class="opacity-0"
+      enter-active-class="transition duration-300"
+      leave-active-class="transition duration-300"
+    >
+      <component :is="Component" />
+    </Transition>
+  </RouterView>
 </template>

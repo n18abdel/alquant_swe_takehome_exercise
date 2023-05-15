@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { computed } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 defineProps({
   title: String,
   items: Array<{ name: string; path: string }>,
   getStarted: { type: String, required: true }
 })
+const displayGetStarted = computed(() => useRoute().path === '/')
 </script>
 
 <template>
@@ -46,7 +48,7 @@ defineProps({
       </ul>
     </div>
     <div class="navbar-end">
-      <RouterLink :to="getStarted" class="btn">Get started</RouterLink>
+      <RouterLink v-show="displayGetStarted" :to="getStarted" class="btn">Get started</RouterLink>
     </div>
   </div>
 </template>
