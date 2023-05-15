@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, send_from_directory
 
+from . import stocks
+
 app = Flask(__name__, static_folder="../../client/dist")
 
 
@@ -14,3 +16,13 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route("/stocks/performance")
+def performance():
+    return stocks.performance()
+
+
+@app.route("/stocks/statistics")
+def statistics():
+    return stocks.statistics()
