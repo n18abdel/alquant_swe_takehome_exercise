@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
-import NavBar from './components/NavBar.vue'
+import NavBar from '@/components/NavBar.vue'
 import { capitalize } from 'vue'
 const getStarted = '/performance'
 const navbar = {

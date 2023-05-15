@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CenteredHero from '../components/CenteredHero.vue'
+import CenteredHero from '@/components/CenteredHero.vue'
 const props = defineProps({
   getStarted: { type: String, required: true }
 })
