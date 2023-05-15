@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 defineProps({
   title: String,
@@ -7,13 +7,28 @@ defineProps({
   getStarted: { type: String, required: true }
 })
 const displayGetStarted = computed(() => useRoute().path === '/')
+const dropdownOpen = ref(false)
+
+const blurActiveElement = () => {
+  if (document.activeElement) (document.activeElement as HTMLElement).blur()
+}
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value
+  blurActiveElement()
+}
+
+const closeDropdown = () => {
+  dropdownOpen.value = false
+  blurActiveElement()
+}
 </script>
 
 <template>
   <div class="navbar bg-base-100">
     <div class="navbar-start">
-      <div class="dropdown">
-        <label tabindex="0" class="btn btn-ghost lg:hidden">
+      <div class="dropdown" :class="{ 'dropdown-open': dropdownOpen }">
+        <label tabindex="0" class="btn btn-ghost lg:hidden" @click="toggleDropdown">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -33,7 +48,7 @@ const displayGetStarted = computed(() => useRoute().path === '/')
           tabindex="0"
           class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
         >
-          <li v-for="item in items" :key="item.name">
+          <li v-for="item in items" :key="item.name" @click="closeDropdown">
             <RouterLink :to="item.path">{{ item.name }}</RouterLink>
           </li>
         </ul>
