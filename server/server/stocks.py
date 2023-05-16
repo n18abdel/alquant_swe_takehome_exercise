@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import pandas as pd
 import yfinance as yf
 
 DEFAULT_SYMBOLS = ["AAPL", "MSFT", "TSLA"]
@@ -33,8 +34,12 @@ def statistics(symbols=DEFAULT_SYMBOLS, start=DEFAULT_START):
     returns = df.pct_change()
     volatility = returns.std()
     annualized_volatility = volatility * (NUM_PERIODS_PER_YEAR**0.5)
-    return {
-        "cumulative_return": cumulative_return.to_dict(),
-        "annualized_return": annualized_return.to_dict(),
-        "annualized_volatility": annualized_volatility.to_dict(),
-    }
+    return (
+        pd.concat(
+            (cumulative_return, annualized_return, annualized_volatility),
+            axis=1,
+            keys=["cumulative_return", "annualized_return", "annualized_volatility"],
+        )
+        .round(4)
+        .to_dict("index")
+    )
