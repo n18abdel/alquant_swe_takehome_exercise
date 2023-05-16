@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import Plotly from 'plotly.js-dist-min'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import { ref, watch } from 'vue'
 import ErrorBox from '@/components/ErrorBox.vue'
 import FadeIn from '@/components/FadeIn.vue'
 
