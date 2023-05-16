@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import FadeIn from '@/components/FadeIn.vue'
+
 defineProps({
   title: String,
   items: Array<{ name: string; path: string }>,
   getStarted: { type: String, required: true }
 })
+
 const displayGetStarted = computed(() => useRoute().path === '/')
 const dropdownOpen = ref(false)
 
@@ -63,7 +66,13 @@ const closeDropdown = () => {
       </ul>
     </div>
     <div class="navbar-end">
-      <RouterLink v-show="displayGetStarted" :to="getStarted" class="btn">Get started</RouterLink>
+      <FadeIn
+        v-show="displayGetStarted"
+        leave-to-class="opacity-0"
+        leave-active-class="transition duration-75"
+      >
+        <RouterLink :to="getStarted" class="btn">Get started</RouterLink>
+      </FadeIn>
     </div>
   </div>
 </template>
