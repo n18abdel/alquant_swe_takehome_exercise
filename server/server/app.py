@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 
-from flask import Flask, request, send_from_directory
+from flask import Flask, Response, abort, make_response, request, send_from_directory
+from werkzeug.http import generate_etag, parse_etags
 
 from . import stocks
 
@@ -30,23 +31,43 @@ def validate_start_date(start):
             )
 
 
-@app.route("/stocks/performance")
-def performance():
+def get_etag(start):
+    unique_str = f"{datetime.now().date()}-{start}"
+    return generate_etag(unique_str.encode("utf-8"))
+
+
+def check_etag(etag):
+    if_none_match_header = request.headers.get("If-None-Match")
+    return if_none_match_header and etag in parse_etags(if_none_match_header)
+
+
+def validate_request():
     start = request.args.get("start")
     error_message = validate_start_date(start)
-    if error_message is None:
-        args = {"start": start} if start is not None else {}
-        return stocks.performance(**args)
-    else:
-        return {"error": error_message}, 400
+    if error_message is not None:
+        abort(400, error_message)
+
+    etag = get_etag(start)
+    if check_etag(etag):
+        return Response(status=304)
+
+    args = {"start": start} if start is not None else {}
+    return args, etag
+
+
+@app.route("/stocks/performance")
+def performance():
+    result = validate_request()
+    if isinstance(result, Response):
+        return result
+    args, etag = result
+    return make_response((stocks.performance(**args), {"ETag": etag}))
 
 
 @app.route("/stocks/statistics")
 def statistics():
-    start = request.args.get("start")
-    error_message = validate_start_date(start)
-    if error_message is None:
-        args = {"start": start} if start is not None else {}
-        return stocks.statistics(**args)
-    else:
-        return {"error": error_message}, 400
+    result = validate_request()
+    if isinstance(result, Response):
+        return result
+    args, etag = result
+    return make_response((stocks.statistics(**args), {"ETag": etag}))
