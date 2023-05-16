@@ -11,10 +11,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-screen">
+  <div class="flex justify-center items-center w-full">
     <FadeIn v-show="!isLoading && !error"><slot></slot></FadeIn>
     <FadeIn v-show="!isLoading && error"
-      ><ErrorBox class="h-1/4 w-1/3 justify-center" :message="errorMessage"
+      ><ErrorBox class="h-full w-1/3 justify-center" :message="errorMessage"
     /></FadeIn>
     <LoadingSpinner v-if="isLoading" />
   </div>
