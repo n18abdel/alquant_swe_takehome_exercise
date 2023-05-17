@@ -19,6 +19,8 @@ def serve(path):
         os.path.join(os.path.abspath(app.static_folder), path)
     ):
         return send_from_directory(app.static_folder, path)
+    elif path != "" and path not in {"performance", "statistics"}:
+        abort(404)
     else:
         return send_from_directory(app.static_folder, "index.html")
 
