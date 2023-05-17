@@ -1,3 +1,8 @@
+try:
+    import unzip_requirements
+except ImportError:
+    pass
+
 import os
 from datetime import datetime, timedelta
 
@@ -8,7 +13,7 @@ from werkzeug.http import generate_etag, parse_etags
 from . import stocks
 
 cache = Cache(config={"CACHE_TYPE": "SimpleCache"})
-app = Flask(__name__, static_folder="../../client/dist")
+app = Flask(__name__, static_folder="../dist")
 cache.init_app(app)
 
 
